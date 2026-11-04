@@ -2,15 +2,15 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import type { PatientIngestMessage } from '../../shared/queue/messages/patient-ingest.message.js';
 import {
-  EVENT_LOG_REPOSITORY,
-  EventLogStatus,
-  type EventLogRepository,
-  ProcessingOutcome,
-} from '../event/repositories/event-log.repository.js';
-import {
   PATIENT_EVENT_PROCESSOR,
   type PatientEventProcessor,
 } from './processing/patient-event-processor.js';
+import {
+  EVENT_LOG_REPOSITORY,
+  EventLogStatus,
+  ProcessingOutcome,
+  type EventLogRepository,
+} from './repositories/event-log.repository.js';
 import {
   PATIENT_REPOSITORY,
   type PatientRepository,

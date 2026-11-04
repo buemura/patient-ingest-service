@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import type { Env } from '../../config/env.js';
-import { EVENT_LOG_REPOSITORY } from '../../modules/event/repositories/event-log.repository.js';
+import { EVENT_LOG_REPOSITORY } from '../../modules/patient/repositories/event-log.repository.js';
 import { PATIENT_REPOSITORY } from '../../modules/patient/repositories/patient.repository.js';
 import { MongooseEventLogRepository } from './mongoose/repositories/mongoose-event-log.repository.js';
 import { MongoosePatientRepository } from './mongoose/repositories/mongoose-patient.repository.js';

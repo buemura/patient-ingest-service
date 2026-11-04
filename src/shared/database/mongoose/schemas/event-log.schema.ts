@@ -4,7 +4,7 @@ import { type HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 import {
   EventLogStatus,
   ProcessingOutcome,
-} from '../../../../modules/event/repositories/event-log.repository.js';
+} from '../../../../modules/patient/repositories/event-log.repository.js';
 
 @Schema({ collection: 'event_logs', timestamps: true })
 export class EventLog {

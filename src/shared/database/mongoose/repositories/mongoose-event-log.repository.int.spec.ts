@@ -3,7 +3,7 @@ import type { Connection, Model } from 'mongoose';
 import {
   type NewEventLogEntry,
   ProcessingOutcome,
-} from '../../../../modules/event/repositories/event-log.repository.js';
+} from '../../../../modules/patient/repositories/event-log.repository.js';
 import { startMongo } from '../../../../../test/utils/mongo-memory.js';
 import { EventLog, EventLogSchema } from '../schemas/event-log.schema.js';
 import { MongooseEventLogRepository } from './mongoose-event-log.repository.js';

@@ -7,7 +7,7 @@ import {
   EventLogStatus,
   type NewEventLogEntry,
   type ProcessingOutcome,
-} from '../../../../modules/event/repositories/event-log.repository.js';
+} from '../../../../modules/patient/repositories/event-log.repository.js';
 import { isDuplicateKeyError } from '../mongo-errors.js';
 import { EventLog } from '../schemas/event-log.schema.js';
 

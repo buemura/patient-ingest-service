@@ -4,7 +4,7 @@ import {
   EventLogStatus,
   type NewEventLogEntry,
   type ProcessingOutcome,
-} from '../event/repositories/event-log.repository.js';
+} from './repositories/event-log.repository.js';
 import { PatientService } from './patient.service.js';
 import type { PatientEventProcessor } from './processing/patient-event-processor.js';
 import type {
