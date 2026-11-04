@@ -67,7 +67,7 @@ describe('PatientIngestConsumer', () => {
     handled = [];
     failWith = undefined;
     const service = {
-      handle: async (event: PatientIngestMessage) => {
+      handlePatientIngest: async (event: PatientIngestMessage) => {
         if (failWith) throw failWith;
         handled.push(event);
         return 'applied';
