@@ -3,14 +3,14 @@ import type {
   MessageHandler,
   MessageSubscriber,
   SubscribeOptions,
-} from '../../shared/queue/message-subscriber.js';
-import type { PatientIngestMessage } from '../../shared/queue/messages/patient-ingest.message.js';
+} from '../../../shared/queue/message-subscriber.js';
+import type { PatientIngestMessage } from '../../../shared/queue/messages/patient-ingest.message.js';
 import {
   PATIENT_INGEST_MAX_RETRIES,
   PATIENT_INGEST_QUEUE,
-} from '../../shared/queue/queue.constants.js';
-import { PatientIngestConsumer } from './patient.consumer.js';
-import type { PatientService } from './patient.service.js';
+} from '../../../shared/queue/queue.constants.js';
+import type { PatientService } from '../patient.service.js';
+import { PatientIngestConsumer } from './patient-ingest.consumer.js';
 
 class FakeMessage implements IncomingMessage {
   settlement?: 'ack' | 'retry' | 'deadLetter';

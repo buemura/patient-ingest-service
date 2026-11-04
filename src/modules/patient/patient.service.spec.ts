@@ -1,15 +1,15 @@
+import type { PatientIngestMessage } from '../../shared/queue/messages/patient-ingest.message.js';
 import type {
   EventLogRepository,
   NewEventLogEntry,
   ProcessingOutcome,
 } from '../event/repositories/event-log.repository.js';
-import type { PatientIngestMessage } from '../../shared/queue/messages/patient-ingest.message.js';
+import { PatientService } from './patient.service.js';
 import type { PatientEventProcessor } from './processing/patient-event-processor.js';
 import type {
   PatientRepository,
   PatientState,
 } from './repositories/patient.repository.js';
-import { PatientService } from './patient.service.js';
 
 class InMemoryEventLog implements EventLogRepository {
   readonly entries = new Map<
@@ -83,7 +83,7 @@ describe('PatientService', () => {
   });
 
   it('processes a new event and stores it as the latest patient state', async () => {
-    const outcome = await service.handle(message());
+    const outcome = await service.handlePatientIngest(message());
 
     expect(outcome).toBe('applied');
     expect(processor.processed).toEqual(['key-1']);
@@ -97,7 +97,7 @@ describe('PatientService', () => {
   });
 
   it('records the event in the log as processed', async () => {
-    await service.handle(message());
+    await service.handlePatientIngest(message());
 
     expect(eventLog.entries.get('key-1')).toMatchObject({
       patientId: 'p-1',
@@ -110,9 +110,9 @@ describe('PatientService', () => {
   });
 
   it('skips an event that was already processed', async () => {
-    await service.handle(message());
+    await service.handlePatientIngest(message());
 
-    const outcome = await service.handle(message());
+    const outcome = await service.handlePatientIngest(message());
 
     expect(outcome).toBe('duplicate');
     expect(processor.processed).toEqual(['key-1']);
@@ -121,10 +121,10 @@ describe('PatientService', () => {
 
   it('reprocesses an event whose earlier attempt never completed', async () => {
     processor.failWith = new Error('crashed mid-processing');
-    await expect(service.handle(message())).rejects.toThrow();
+    await expect(service.handlePatientIngest(message())).rejects.toThrow();
     processor.failWith = undefined;
 
-    const outcome = await service.handle(message());
+    const outcome = await service.handlePatientIngest(message());
 
     expect(outcome).toBe('applied');
     expect(processor.processed).toEqual(['key-1']);
@@ -133,7 +133,7 @@ describe('PatientService', () => {
   it('leaves a failed event pending and the patient untouched', async () => {
     processor.failWith = new Error('external system down');
 
-    await expect(service.handle(message())).rejects.toThrow(
+    await expect(service.handlePatientIngest(message())).rejects.toThrow(
       'external system down',
     );
 
@@ -142,7 +142,7 @@ describe('PatientService', () => {
   });
 
   it('does not let an older event overwrite newer patient state', async () => {
-    await service.handle(
+    await service.handlePatientIngest(
       message({
         idempotencyKey: 'newer',
         ts: '2026-01-01T11:00:00.000Z',
@@ -150,7 +150,7 @@ describe('PatientService', () => {
       }),
     );
 
-    const outcome = await service.handle(
+    const outcome = await service.handlePatientIngest(
       message({
         idempotencyKey: 'older',
         ts: '2026-01-01T10:00:00.000Z',
@@ -185,7 +185,7 @@ describe('PatientService', () => {
       }),
     ];
 
-    for (const event of events) await service.handle(event);
+    for (const event of events) await service.handlePatientIngest(event);
 
     expect(patients.patients.get('p-1')?.data).toEqual({ v: 3 });
     expect(processor.processed).toEqual(['b', 'c', 'a']);

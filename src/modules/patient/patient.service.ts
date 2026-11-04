@@ -28,7 +28,9 @@ export class PatientService {
     private readonly processor: PatientEventProcessor,
   ) {}
 
-  async handle(event: PatientIngestMessage): Promise<HandleOutcome> {
+  async handlePatientIngest(
+    event: PatientIngestMessage,
+  ): Promise<HandleOutcome> {
     const ts = new Date(event.ts);
     const { status } = await this.eventLog.register({
       idempotencyKey: event.idempotencyKey,
