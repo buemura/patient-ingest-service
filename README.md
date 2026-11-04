@@ -94,6 +94,7 @@ The e2e suite reads `E2E_DATABASE_URL` and `E2E_RABBITMQ_URL` when your infra ru
 
 ## What I would do with more time
 
+- **Claim an event before calling the external system.** A replay that arrives while the original is still `pending` gets processed by a second worker. The stored result stays correct, but the external call runs twice (about 1% of events in load tests). The fix is a lease on the `event_logs` document: an atomic `findOneAndUpdate` claims it, and messages that find it held wait in a TTL queue that dead-letters back to the main queue. *Cost:* a crashed worker's event waits out the lease, and the downstream system should still deduplicate on the idempotency key.
 - **Delayed retries with backoff** (a TTL'd retry queue that dead-letters back), so a struggling external system is not hammered.
 - **A DLQ replay tool** and alerting on DLQ depth.
 - **Observability:** metrics for queue depth, consumer lag, processing latency, and outcomes (applied/stale/duplicate); trace ids from request to consumer; structured JSON logs.
