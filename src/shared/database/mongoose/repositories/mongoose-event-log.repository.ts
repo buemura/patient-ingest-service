@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import type { Model } from 'mongoose';
 
-import type {
-  EventLogRepository,
+import {
+  type EventLogRepository,
   EventLogStatus,
-  NewEventLogEntry,
-  ProcessingOutcome,
+  type NewEventLogEntry,
+  type ProcessingOutcome,
 } from '../../../../modules/event/repositories/event-log.repository.js';
 import { isDuplicateKeyError } from '../mongo-errors.js';
 import { EventLog } from '../schemas/event-log.schema.js';
@@ -22,7 +22,7 @@ export class MongooseEventLogRepository implements EventLogRepository {
       const doc = await this.model
         .findOneAndUpdate(
           { idempotencyKey: entry.idempotencyKey },
-          { $setOnInsert: { ...entry, status: 'pending' } },
+          { $setOnInsert: { ...entry, status: EventLogStatus.Pending } },
           { upsert: true, returnDocument: 'after', projection: { status: 1 } },
         )
         .lean()
@@ -44,7 +44,13 @@ export class MongooseEventLogRepository implements EventLogRepository {
   ): Promise<void> {
     await this.model.updateOne(
       { idempotencyKey },
-      { $set: { status: 'processed', outcome, processedAt: new Date() } },
+      {
+        $set: {
+          status: EventLogStatus.Processed,
+          outcome,
+          processedAt: new Date(),
+        },
+      },
     );
   }
 }

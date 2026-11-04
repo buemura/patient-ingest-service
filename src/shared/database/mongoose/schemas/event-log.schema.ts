@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { type HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
-import type {
+import {
   EventLogStatus,
   ProcessingOutcome,
 } from '../../../../modules/event/repositories/event-log.repository.js';
@@ -26,10 +26,10 @@ export class EventLog {
   @Prop({ required: true })
   receivedAt: Date;
 
-  @Prop({ type: String, required: true, enum: ['pending', 'processed'] })
+  @Prop({ type: String, required: true, enum: Object.values(EventLogStatus) })
   status: EventLogStatus;
 
-  @Prop({ type: String, enum: ['applied', 'stale'] })
+  @Prop({ type: String, enum: Object.values(ProcessingOutcome) })
   outcome?: ProcessingOutcome;
 
   @Prop()

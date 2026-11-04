@@ -1,8 +1,9 @@
 import type { PatientIngestMessage } from '../../shared/queue/messages/patient-ingest.message.js';
-import type {
-  EventLogRepository,
-  NewEventLogEntry,
-  ProcessingOutcome,
+import {
+  type EventLogRepository,
+  EventLogStatus,
+  type NewEventLogEntry,
+  type ProcessingOutcome,
 } from '../event/repositories/event-log.repository.js';
 import { PatientService } from './patient.service.js';
 import type { PatientEventProcessor } from './processing/patient-event-processor.js';
@@ -15,7 +16,7 @@ class InMemoryEventLog implements EventLogRepository {
   readonly entries = new Map<
     string,
     NewEventLogEntry & {
-      status: 'pending' | 'processed';
+      status: EventLogStatus;
       outcome?: ProcessingOutcome;
     }
   >();
@@ -23,13 +24,16 @@ class InMemoryEventLog implements EventLogRepository {
   async register(entry: NewEventLogEntry) {
     const existing = this.entries.get(entry.idempotencyKey);
     if (existing) return { status: existing.status };
-    this.entries.set(entry.idempotencyKey, { ...entry, status: 'pending' });
-    return { status: 'pending' as const };
+    this.entries.set(entry.idempotencyKey, {
+      ...entry,
+      status: EventLogStatus.Pending,
+    });
+    return { status: EventLogStatus.Pending };
   }
 
   async markProcessed(idempotencyKey: string, outcome: ProcessingOutcome) {
     const entry = this.entries.get(idempotencyKey)!;
-    entry.status = 'processed';
+    entry.status = EventLogStatus.Processed;
     entry.outcome = outcome;
   }
 }

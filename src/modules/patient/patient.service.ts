@@ -3,8 +3,9 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { PatientIngestMessage } from '../../shared/queue/messages/patient-ingest.message.js';
 import {
   EVENT_LOG_REPOSITORY,
+  EventLogStatus,
   type EventLogRepository,
-  type ProcessingOutcome,
+  ProcessingOutcome,
 } from '../event/repositories/event-log.repository.js';
 import {
   PATIENT_EVENT_PROCESSOR,
@@ -15,7 +16,11 @@ import {
   type PatientRepository,
 } from './repositories/patient.repository.js';
 
-export type HandleOutcome = ProcessingOutcome | 'duplicate';
+export enum SkippedOutcome {
+  Duplicate = 'duplicate',
+}
+
+export type HandleOutcome = ProcessingOutcome | SkippedOutcome;
 
 @Injectable()
 export class PatientService {
@@ -41,9 +46,9 @@ export class PatientService {
       receivedAt: new Date(event.receivedAt),
     });
 
-    if (status === 'processed') {
+    if (status === EventLogStatus.Processed) {
       this.logger.log(`Duplicate event skipped key=${event.idempotencyKey}`);
-      return 'duplicate';
+      return SkippedOutcome.Duplicate;
     }
 
     await this.processor.process(event);
@@ -55,7 +60,9 @@ export class PatientService {
       lastEventAt: ts,
       data: event.data,
     });
-    const outcome: ProcessingOutcome = applied ? 'applied' : 'stale';
+    const outcome = applied
+      ? ProcessingOutcome.Applied
+      : ProcessingOutcome.Stale;
 
     await this.eventLog.markProcessed(event.idempotencyKey, outcome);
 

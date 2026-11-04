@@ -1,7 +1,14 @@
 export const EVENT_LOG_REPOSITORY = Symbol('EVENT_LOG_REPOSITORY');
 
-export type EventLogStatus = 'pending' | 'processed';
-export type ProcessingOutcome = 'applied' | 'stale';
+export enum EventLogStatus {
+  Pending = 'pending',
+  Processed = 'processed',
+}
+
+export enum ProcessingOutcome {
+  Applied = 'applied',
+  Stale = 'stale',
+}
 
 export interface NewEventLogEntry {
   idempotencyKey: string;

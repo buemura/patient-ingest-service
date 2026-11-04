@@ -1,6 +1,9 @@
 import type { Connection, Model } from 'mongoose';
 
-import type { NewEventLogEntry } from '../../../../modules/event/repositories/event-log.repository.js';
+import {
+  type NewEventLogEntry,
+  ProcessingOutcome,
+} from '../../../../modules/event/repositories/event-log.repository.js';
 import { startMongo } from '../../../../../test/utils/mongo-memory.js';
 import { EventLog, EventLogSchema } from '../schemas/event-log.schema.js';
 import { MongooseEventLogRepository } from './mongoose-event-log.repository.js';
@@ -63,7 +66,7 @@ describe('MongooseEventLogRepository', () => {
   it('reports an event as processed once marked', async () => {
     await repository.register(entry());
 
-    await repository.markProcessed('key-1', 'stale');
+    await repository.markProcessed('key-1', ProcessingOutcome.Stale);
 
     expect(await repository.register(entry())).toEqual({ status: 'processed' });
     expect(
