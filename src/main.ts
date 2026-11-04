@@ -1,14 +1,15 @@
-import { StandardSchemaValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+import { configureApp } from './app.setup.js';
 import type { Env } from './config/env.js';
 import { AppModule } from './modules/app.module.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(new StandardSchemaValidationPipe());
+  configureApp(app);
 
   const document = SwaggerModule.createDocument(
     app,

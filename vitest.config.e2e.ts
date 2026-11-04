@@ -7,12 +7,17 @@ export default defineConfig({
     globals: true,
     root: './',
     include: ['**/*.e2e-spec.ts'],
-    // AppModule validates env on import; provide values so e2e runs without a .env file.
     env: {
       PORT: '3000',
-      DATABASE_URL: 'mongodb://localhost:27017/patient-ingest-test',
-      RABBITMQ_URL: 'amqp://localhost:5672',
+      DATABASE_URL:
+        process.env.E2E_DATABASE_URL ??
+        'mongodb://admin:admin@localhost:27017/patient-ingest-e2e?authSource=admin',
+      RABBITMQ_URL:
+        process.env.E2E_RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672',
       RABBITMQ_PREFETCH: '10',
     },
+    testTimeout: 30_000,
+    hookTimeout: 30_000,
+    fileParallelism: false,
   },
 });

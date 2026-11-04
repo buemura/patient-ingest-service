@@ -11,7 +11,8 @@ export const envSchema = z.object({
   RABBITMQ_URL: z
     .string()
     .regex(/^amqps?:\/\//, 'must be an amqp:// or amqps:// URL'),
-  RABBITMQ_PREFETCH: z.coerce.number().int().positive().default(10),
+  RABBITMQ_PREFETCH: z.coerce.number().int().positive().default(50),
+  PROCESSING_DELAY_MS: z.coerce.number().int().nonnegative().default(5000),
 });
 
 export type Env = z.infer<typeof envSchema>;
