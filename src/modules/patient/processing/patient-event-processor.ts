@@ -1,4 +1,4 @@
-import type { PatientIngestMessage } from '../../../shared/queue/messages/patient-ingest.message.js';
+import type { PatientIngestMessage } from '../dto/patient-ingest.dto.js';
 
 export const PATIENT_EVENT_PROCESSOR = Symbol('PATIENT_EVENT_PROCESSOR');
 

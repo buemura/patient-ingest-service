@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
-import type { PatientIngestMessage } from '../../shared/queue/messages/patient-ingest.message.js';
+import type { PatientIngestMessage } from './dto/patient-ingest.dto.js';
 import {
   PATIENT_EVENT_PROCESSOR,
   type PatientEventProcessor,

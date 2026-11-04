@@ -4,7 +4,7 @@ import type {
   MessageSubscriber,
   SubscribeOptions,
 } from '../../../shared/queue/message-subscriber.js';
-import type { PatientIngestMessage } from '../../../shared/queue/messages/patient-ingest.message.js';
+import type { PatientIngestMessage } from '../dto/patient-ingest.dto.js';
 import {
   PATIENT_INGEST_MAX_RETRIES,
   PATIENT_INGEST_QUEUE,

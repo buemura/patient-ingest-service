@@ -9,7 +9,7 @@ import {
   MESSAGE_PUBLISHER,
   type MessagePublisher,
 } from '../../shared/queue/message-publisher.js';
-import type { PatientIngestMessage } from '../../shared/queue/messages/patient-ingest.message.js';
+import type { PatientIngestMessage } from '../patient/dto/patient-ingest.dto.js';
 import { PATIENT_INGEST_QUEUE } from '../../shared/queue/queue.constants.js';
 import { buildIdempotencyKey } from './domain/idempotency-key.js';
 import type { CreateEventDto } from './dto/create-event.dto.js';

@@ -13,7 +13,7 @@ import {
   PATIENT_EVENT_PROCESSOR,
   type PatientEventProcessor,
 } from '../src/modules/patient/processing/patient-event-processor.js';
-import type { PatientIngestMessage } from '../src/shared/queue/messages/patient-ingest.message.js';
+import type { PatientIngestMessage } from '../src/modules/patient/dto/patient-ingest.dto.js';
 import { PATIENT_INGEST_DLQ } from '../src/shared/queue/queue.constants.js';
 import { waitFor } from './utils/wait-for.js';
 

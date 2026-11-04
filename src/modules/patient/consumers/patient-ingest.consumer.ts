@@ -7,7 +7,7 @@ import {
 import {
   type PatientIngestMessage,
   patientIngestMessageSchema,
-} from '../../../shared/queue/messages/patient-ingest.message.js';
+} from '../dto/patient-ingest.dto.js';
 import { QueueConsumer } from '../../../shared/queue/queue-consumer.js';
 import {
   PATIENT_INGEST_MAX_RETRIES,
